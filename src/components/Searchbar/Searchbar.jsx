@@ -1,40 +1,35 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
+import PropTypes from 'prop-types';
+import { BsSearchHeart } from 'react-icons/bs';
+
+
 import {
   Header,
   SearchForm,
   SearchFormBtn,
   SearchFormInput,
 } from './Searchbar.styled';
-import { BsSearchHeart } from 'react-icons/bs';
-import { toast } from 'react-toastify';
-import { notifyOptions } from '../Notify/Notify.js';
-import PropTypes from 'prop-types';
 
 export class Searchbar extends Component {
   state = {
-    value: '',
+    searchName: '',
   };
 
   handleChange = ({ target: { value } }) => {
-    this.setState({ value: value.toLowerCase() });
+    this.setState({ searchName: value.toLowerCase() });
   };
-
   handleSubmit = e => {
     e.preventDefault();
-    if (this.state.value.trim() === '') {
-      return toast.info('Please enter key words for search', notifyOptions);
-    }
-    this.props.onSubmit(this.state.value);
-    this.setState({ value: '' });
+    this.props.onSearchSubmit(this.state.searchName);
+    this.setState({ searchName: '' });
   };
-
   render() {
-    const { value } = this.state;
+    const { searchName } = this.state;
 
     return (
       <Header>
         <SearchForm onSubmit={this.handleSubmit}>
-          <SearchFormBtn>
+          <SearchFormBtn type="submit">
             <BsSearchHeart size="24" />
           </SearchFormBtn>
           <SearchFormInput
@@ -42,7 +37,7 @@ export class Searchbar extends Component {
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
-            value={value}
+            value={searchName}
             onChange={this.handleChange}
           />
         </SearchForm>
@@ -51,6 +46,6 @@ export class Searchbar extends Component {
   }
 }
 
-Searchbar.propType = {
-  onSubmit: PropTypes.func.isRequired,
+Searchbar.propTypes = {
+  onSearchSubmit: PropTypes.func.isRequired,
 };

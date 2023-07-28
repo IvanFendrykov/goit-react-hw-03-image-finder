@@ -7,6 +7,7 @@ export const ModalBackdrop = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
 `;
 
 export const ModalContent = styled.div`
@@ -40,7 +41,7 @@ export const ModalDescr = styled.p`
 
   margin: 0 auto;
   padding: ${props => props.theme.space[4]}px;
-  width: 100%;
+  width: auto;
 
   color: ${props => props.theme.colors.black};
   text-shadow: ${props => props.theme.shadows.textShadow};

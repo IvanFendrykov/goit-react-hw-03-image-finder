@@ -1,55 +1,35 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { createPortal } from 'react-dom';
-import {
-  ModalBackdrop,
-  ModalContent,
-  ModalDescr,
-  ModalPicture,
-} from './Modal.styled';
+import PropTypes from 'prop-types';
+import { ModalBackdrop,ModalDescr, ModalContent, ModalPicture } from './Modal.styled';
 
 const modalRoot = document.querySelector('#modal-root');
 
 export default class Modal extends Component {
-  static propTypes = {
-    modalData: PropTypes.shape({
-      largeImageURL: PropTypes.string.isRequired,
-      tags: PropTypes.string.isRequired,
-    }),
-    onModalClose: PropTypes.func,
-  };
-
   componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
+    window.addEventListener('keydown', this.props.onClose);
+    window.addEventListener('click', this.props.onClose);
   }
-
   componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleBackdropeClick);
+    window.removeEventListener('keydown', this.props.onClose);
   }
-
-  handleKeyDown = e => {
-    if (e.code === `Escape`) {
-      this.props.onModalClose();
-    }
-  };
-
-  handleBackdropeClick = e => {
-    if (e.target === e.currentTarget) {
-      this.props.onModalClose();
-    }
-  };
 
   render() {
-    const { largeImageURL, tags } = this.props.modalData;
-
+    const { image, alt } = this.props;
     return createPortal(
-      <ModalBackdrop onClick={this.handleBackdropeClick}>
+      <ModalBackdrop >
         <ModalContent>
-          <ModalPicture src={largeImageURL} alt={tags} />
-          <ModalDescr>{tags}</ModalDescr>
+          <ModalPicture src={`${image}`} alt={`${alt}`} />
+          <ModalDescr>{alt}</ModalDescr>
         </ModalContent>
       </ModalBackdrop>,
       modalRoot
     );
   }
 }
+
+Modal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  image: PropTypes.string,
+  alt: PropTypes.string,
+};

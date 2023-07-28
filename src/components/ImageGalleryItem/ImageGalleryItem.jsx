@@ -1,28 +1,44 @@
 import { ListItem, Picture } from './ImageGalleryItem.styled';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Modal from 'components/Modal/Modal';
 
-export const ImageGalleryItem = ({ item, onImageClick }) => {
-  const { largeImageURL, tags, webformatURL } = item;
+export  class ImageGalleryItem extends Component {
+  state = {
+    isModalOpen: false,
+  };
 
-  return (
-    <ListItem
-      onClick={e => {
-        e.preventDefault();
-        onImageClick({ largeImageURL, tags });
-      }}
-    >
-      <div>
-        <Picture src={webformatURL} alt={tags} loading="lazy" />
-      </div>
-    </ListItem>
-  );
-};
+  openModal = () => {
+    this.setState({ isModalOpen: true });
+  };
+
+  closeModal = ({ code, target: { nodeName } }) => {
+    if (code === 'Escape' || nodeName === 'DIV') {
+      this.setState({ isModalOpen: false });
+    }
+  };
+
+  render() {
+    const { isModalOpen } = this.state;
+    const { largeImageURL, webformatURL, tags } = this.props.image;
+
+    return (
+      <ListItem>
+        <span onClick={this.openModal}>
+          <Picture src={`${webformatURL}`} alt={`${tags}`} />
+        </span>
+        {isModalOpen && (
+          <Modal image={largeImageURL} alt={tags} onClose={this.closeModal} />
+        )}
+      </ListItem>
+    );
+  }
+}
 
 ImageGalleryItem.propTypes = {
-  item: PropTypes.shape({
-    tags: PropTypes.string.isRequired,
-    webformatURL: PropTypes.string.isRequired,
-    largeImageURL: PropTypes.string.isRequired,
-  }).isRequired,
-  onImageClick: PropTypes.func.isRequired,
+  image: PropTypes.shape({
+    largeImageURL: PropTypes.string,
+    webformatURL: PropTypes.string,
+    tags: PropTypes.string,
+  }),
 };

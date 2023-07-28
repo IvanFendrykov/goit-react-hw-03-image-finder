@@ -1,23 +1,19 @@
-const BASE_URL = `https://pixabay.com/api/`;
+
+import axios from 'axios';
+
 const API_KEY = '35888273-1c23fe8a36556823f5034ebc8';
+const BASE_URL = `https://pixabay.com/api/`;
 
-const getImages = (searchText, page = 1) => {
-  return fetch(
-    `${BASE_URL}?key=${API_KEY}&image_type=photo&orientation=horizontal&q=${searchText}&page=${page}&image_type=photo&orientation=horizontal&per_page=12`
-  ).then(response => {
-    if (response.ok) {
-      return response.json();
-    }
-    return Promise.reject(
-      new Error(
-        `Oops... there are no ${searchText} images matching your search... `
-      )
-    );
-  });
+
+axios.defaults.baseURL = BASE_URL;
+axios.defaults.params = {
+  key: API_KEY,
+  image_type: 'photo',
+  orientation: 'horizontal',
+  per_page: 12,
 };
 
-const api = {
-  getImages,
+export const getImages = async (query, page) => {
+  const images = await axios.get(`?q=${query}&page=${page}`);
+  return images;
 };
-
-export default api;
